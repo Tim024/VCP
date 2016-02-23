@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import javax.swing.JPanel;
 
@@ -27,15 +28,17 @@ class MapRenderer extends JPanel {
     private Image startImage = null;
     private Image endImage = null;
     private Point antList[] = null;
-    private Point startPoint = new Point (1,1);
+    private Point startPoint = null;
     private int startPointSize = 30;
     private int endPointSize = 30;
     private int antSize = 30;
-    private Point endPoint = new Point (10,10);
+    private Point endPoint = null;
     private Dimension dim = null;
+    private Rectangle[] obstacles = null;
     
     MapRenderer(Controler c) {
         myControler = c;
+        
         //Load all images
         MediaTracker mt = new MediaTracker(this);
         bgImage = c.getMap().getMapImage();
@@ -70,13 +73,26 @@ class MapRenderer extends JPanel {
     public void updateEndPoint(Point newEnd){
         this.endPoint = newEnd;
     }
+    public void updateObstacles(Rectangle[] obstacles) {
+        this.obstacles = obstacles; //To change body of generated methods, choose Tools | Templates.
+    }
     
     //TODO, if image out of bounds.
+    @Override
     protected void paintComponent(Graphics g) {
         //Paint all images
         super.paintComponent(g);
         //background
         g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), null);
+        //obstacles
+        for(int i = 0; i < obstacles.length; i++)
+        {
+            g.fillRect((int) (obstacles[i].x*(getWidth()/(float) dim.width)), 
+                    (int) (obstacles[i].y*(getHeight()/(float) dim.height)),
+                    (int) (obstacles[i].width*(getWidth()/(float) dim.width)), 
+                    (int) (obstacles[i].height*(getHeight()/(float) dim.height)));
+        }
+        
         //Start and end
         int xStart = (int) ((startPoint.x - startPointSize/2)*(getWidth()/(float) dim.width));
         int yStart = (int) ((startPoint.y - startPointSize/2)*(getHeight()/(float) dim.height));
@@ -88,7 +104,7 @@ class MapRenderer extends JPanel {
         g.drawImage(endImage,xEnd < 0 ? 0 : xEnd ,
                              yEnd < 0 ? 0 : yEnd ,
                              endPointSize, endPointSize ,null);
-        
+        //ants
         //g.drawImage(antImage,250 ,34, 27, 30 ,null);
     }
 }

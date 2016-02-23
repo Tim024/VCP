@@ -4,24 +4,40 @@
  * and open the template in the editor.
  */
 package view;
+import java.awt.BorderLayout;
 import main.Controler;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import model.Map;
 
 public class Window extends JFrame {
   
-    private MapRenderer mapRenderer = null ;
+    private MapRenderer mapRenderer = null;
     private Controler myControler = null;
+    private UIRenderer uIRenderer = null;
+    private JSplitPane contentPanel = null;
     
     public Window(Controler c) {
+        
+
+        
       
         myControler = c;
         mapRenderer = new MapRenderer(myControler);
+        uIRenderer = new UIRenderer();
         
-        this.setSize(500, 300);
+        
+        //Create a split pane.
+        contentPanel = new JSplitPane( JSplitPane.VERTICAL_SPLIT);
+        contentPanel.setDividerLocation(500);
+        contentPanel.add(mapRenderer);
+        contentPanel.add(uIRenderer);
+        
+        this.setSize(500, 600);
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.add(mapRenderer);
+        this.add(contentPanel);
         this.setVisible(true);
     }
 
@@ -30,6 +46,7 @@ public class Window extends JFrame {
         mapRenderer.updateEndPoint(myControler.getMap().getEndPoint());
         mapRenderer.updateMapDimension(myControler.getMap().getDimension());
         mapRenderer.updateStartingPoint(myControler.getMap().getStartingPoint());
+        mapRenderer.updateObstacles(myControler.getMap().getObstacles());
     }
 }
 

@@ -21,7 +21,7 @@ import javax.swing.border.TitledBorder;
 
 /**
  *
- * @author Kashy
+ * @author Tim
  */
 
 class MapRenderer extends JPanel {

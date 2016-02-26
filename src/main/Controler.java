@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import model.AntAlgorithm;
 import model.Map;
 import view.Window;
 /**
@@ -18,6 +19,9 @@ import view.Window;
 public class Controler {
     private Map map = null;
     private Window view = null;
+    private AntAlgorithm algo = null;
+    
+    
     public boolean startingPointToBePlaced = false;
     public boolean endingPointToBePlaced = false;
     public boolean obstacleToBePlaced = false;
@@ -26,10 +30,12 @@ public class Controler {
         map = new Map();//Default
         view = new Window(this);
         
+        algo = new AntAlgorithm(map);
+        
         view.updateView();
     }
     
-    public Map getMap(){
+    public Map getMap(){//should not be here
         return this.map;
     }
     //If we are running, do not authorize change of values.

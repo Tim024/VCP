@@ -6,6 +6,7 @@
 package view;
 
 import java.awt.Dimension;
+import javax.swing.BorderFactory; 
 import main.Controler;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -13,7 +14,10 @@ import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
 
 /**
  *
@@ -39,6 +43,10 @@ class MapRenderer extends JPanel {
     MapRenderer(Controler c) {
         myControler = c;
         
+        //Set border
+        TitledBorder title = BorderFactory.createTitledBorder("Ant Simulation Display");
+        this.setBorder(title);
+        
         //Load all images
         MediaTracker mt = new MediaTracker(this);
         bgImage = c.getMap().getMapImage();
@@ -55,6 +63,34 @@ class MapRenderer extends JPanel {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        
+        this.addMouseListener(new MouseAdapter() {
+                int x=0,y=0;
+                
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if(c.startingPointToBePlaced){
+                        c.setStartingPoint((int) (e.getX()*((float) dim.width)/getWidth()), 
+                                (int) (e.getY()*((float) dim.height)/getHeight()));
+                        c.startingPointToBePlaced = false;
+                    } else if(c.endingPointToBePlaced){
+                        c.setEndingPoint((int) (e.getX()*((float) dim.width)/getWidth()), 
+                                (int) (e.getY()*((float) dim.height)/getHeight()));
+                        c.endingPointToBePlaced = false;
+                    } else if(c.obstacleToBePlaced){
+                        x = (int) (e.getX()*((float) dim.width)/getWidth());
+                        y = (int) (e.getY()*((float) dim.height)/getHeight());
+                    }
+                }
+                
+                @Override
+                public void mouseReleased(MouseEvent e){
+                    if(c.obstacleToBePlaced){
+                        c.setObstacle(x,y,(int) (e.getX()*((float) dim.width)/getWidth()) - x, (int) (e.getY()*((float) dim.height)/getHeight()) - y);
+                        c.obstacleToBePlaced = false;
+                    }
+                }
+            });
     }
     
     public void updateMapDimension(Dimension dim){
@@ -74,7 +110,7 @@ class MapRenderer extends JPanel {
         this.endPoint = newEnd;
     }
     public void updateObstacles(Rectangle[] obstacles) {
-        this.obstacles = obstacles; //To change body of generated methods, choose Tools | Templates.
+        this.obstacles = obstacles;
     }
     
     //TODO, if image out of bounds.

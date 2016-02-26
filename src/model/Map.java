@@ -44,4 +44,27 @@ public class Map {
     public Rectangle[] getObstacles(){
         return this.obstacles;
     }
+    public Rectangle getObstacle(int i){
+        return this.obstacles[i];
+    }
+    public void setStartingPoint(int x, int y){
+        this.startPosition.x = x;
+        this.startPosition.y = y;
+    }
+
+    public void setEndingPoint(int x, int y) {
+        this.endPosition.x = x;
+        this.endPosition.y = y;
+    }
+    
+    public void placeObstacle(int x, int y, int width, int height){
+        Rectangle[] newObstacles = new Rectangle[obstacles.length + 1];
+        for(int i = 0; i < obstacles.length; i++)
+        {
+            newObstacles[i]=obstacles[i];
+        }
+        newObstacles[obstacles.length] = new Rectangle(x,y,width,height);
+        this.obstacles = newObstacles;
+       
+    }
 }

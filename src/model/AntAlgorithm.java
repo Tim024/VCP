@@ -42,7 +42,7 @@ public class AntAlgorithm {
     }
     
     
-    private void updatePheromon(){
+    /*private void updatePheromon(){
         //pheromon drop
         for(int i = 0; i < numberOfAnts; i ++){
             pheromonTable[antList[i].getLocation().x][antList[i].getLocation().y] += pheromonStrength;
@@ -53,7 +53,7 @@ public class AntAlgorithm {
                 pheromonTable[x][y] = pheromonTable[x][y] < 0 ? 0 : (pheromonTable[x][y] * pheromonEvaporation);
             }
         }
-    }
+    }*/
     
     public void computeNextState(){
         

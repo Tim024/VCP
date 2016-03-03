@@ -9,7 +9,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import model.AntAlgorithm;
+import model.Ant;
 import model.Map;
 import view.Window;
 /**
@@ -20,13 +24,15 @@ public class Controler {
     private Map map = null;
     private Window view = null;
     private AntAlgorithm algo = null;
-    
-    
+    private int speed = 1;
+
     public boolean startingPointToBePlaced = false;
     public boolean endingPointToBePlaced = false;
     public boolean obstacleToBePlaced = false;
+    private boolean running = false;
     
     public Controler(){
+        this.speed = 1;
         map = new Map();//Default
         view = new Window(this);
         
@@ -34,6 +40,29 @@ public class Controler {
         
         view.updateView();
     }
+    
+    public void stopRun(){
+        this.running = false;
+    }
+    public void run(){
+        this.running = true;
+        new Thread(){
+        public void run(){
+
+        while(running){
+            try {
+                Thread.sleep(4);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            algo.moveStep(speed, map.getEndPoint(), map.getObstacles());
+            view.updateAnts();
+        }
+        //algo.printPheromnTable();
+ 
+        }}.start();
+    }
+    
     
     public Map getMap(){//should not be here
         return this.map;
@@ -60,17 +89,30 @@ public class Controler {
     }
     
     public void setStartingPoint(int x, int y){
-        map.setStartingPoint(x, y);
-        view.updateView();
+        if(!running){
+            map.setStartingPoint(x, y);
+            algo = new AntAlgorithm(map);
+            view.updateView();
+        }
     }
 
     public void setEndingPoint(int x, int y) {
-        map.setEndingPoint(x, y);
-        view.updateView();
+        if(!running){
+            map.setEndingPoint(x, y);
+            algo = new AntAlgorithm(map);
+            view.updateView();
+        }
     }
 
     public void setObstacle(int x, int y, int z, int t) {
-        map.placeObstacle(x,y,z,t);
-        view.updateView();
+        if(!running){
+            map.placeObstacle(x,y,z,t);
+            algo = new AntAlgorithm(map);
+            view.updateView();
+        }
+    }
+    
+    public AntAlgorithm getAlgo(){
+        return this.algo;
     }
 }

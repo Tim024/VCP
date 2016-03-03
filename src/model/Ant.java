@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 
@@ -20,74 +21,97 @@ public class Ant {
     private Point[] memory;
     
     private int antLifeTime;
+    private int initAnt;
     private Point location;
 
     public Ant(Point startingPoint,int antLifetime){
         this.foodFound = false;
-        this.location = startingPoint;
+        this.location = (Point) startingPoint.clone();
         this.antLifeTime = antLifetime;
+        this.initAnt = antLifeTime;
         this.memoryPos = 0;
-        this.memory = new Point[antLifeTime];
+        this.memory = new Point[antLifeTime+1];
     }
     
-    public void move(Point location, Rectangle[] obstacles, double[][] pheromonTable){
-        
-        
-        
-        if(foodFound)
+    public void move(Point location, Rectangle[] obstacles, double[][] pheromonTable, Dimension d){ 
+        //System.out.println(antLifeTime);
+        //if(foodFound)System.out.println("foud");
+        //if on the border we go back
+        if(foodFound || antLifeTime == 0 || (this.location.x <= 1) || this.location.y <= 1 || this.location.x >= d.width-1 ||this.location.y>=d.height-1)
             moveFromMemory();
         else
         {
             this.antLifeTime --;
-            moveTo(location, obstacles, pheromonTable);
+            moveTo(location, obstacles, pheromonTable,d);
         }
     }
     
     private void moveFromMemory(){
         this.memoryPos--;
-        if(memoryPos == 0)
+        if(this.memoryPos < 1){
             foodFound = false;
+            this.antLifeTime = initAnt;
+        }
+            
         this.location = this.memory[memoryPos];
     }
     
     //careful with borders
-    private void moveTo(Point location, Rectangle[] obstacles, double[][] pheromonTable){
+    private void moveTo(Point location, Rectangle[] obstacles, double[][] pheromonTable,Dimension d){
         
-        
+        //System.out.println(this.location);
         int xDiff = location.x - this.location.x;
         int yDiff = location.y - this.location.y;
         
         double[] attractiveness = new double[4];
+        /*
+        double pheromonSum = 0;
+        pheromonSum += pheromonTable[this.location.x + 1][this.location.y]==0?0:pheromonTable[this.location.x + 1][this.location.y];
+        pheromonSum += pheromonTable[this.location.x - 1][this.location.y]==0?0:pheromonTable[this.location.x - 1][this.location.y];
+        pheromonSum += pheromonTable[this.location.x][this.location.y + 1]==0?0:pheromonTable[this.location.x][this.location.y + 1];
+        pheromonSum += pheromonTable[this.location.x][this.location.y - 1]==0?1:pheromonTable[this.location.x][this.location.y - 1];
         
-        double pheromonSum = pheromonTable[this.location.x + 1][this.location.y];
-        pheromonSum += pheromonTable[this.location.x - 1][this.location.y];
-        pheromonSum += pheromonTable[this.location.x][this.location.y + 1];
-        pheromonSum += pheromonTable[this.location.x][this.location.y - 1];
         
         //pheromon attractiveness
         attractiveness[0] = pheromonTable[this.location.x - 1][this.location.y]/pheromonSum;
         attractiveness[1] = pheromonTable[this.location.x + 1][this.location.y]/pheromonSum;
         attractiveness[2] = pheromonTable[this.location.x][this.location.y - 1]/pheromonSum;
         attractiveness[3] = pheromonTable[this.location.x][this.location.y + 1]/pheromonSum;
+   */
+        attractiveness[0] = pheromonTable[this.location.x - 1][this.location.y];
+        attractiveness[1] = pheromonTable[this.location.x + 1][this.location.y];
+        attractiveness[2] = pheromonTable[this.location.x][this.location.y - 1];
+        attractiveness[3] = pheromonTable[this.location.x][this.location.y + 1];
         
         //direction attractiveness
-        if(xDiff > 0) attractiveness[1] += 0.2;
-        if(xDiff < 0) attractiveness[0] += 0.2;
-        if(yDiff > 0) attractiveness[3] += 0.2;
-        if(yDiff < 0) attractiveness[2] += 0.2;
+        if(xDiff >= 0) attractiveness[1] += 0.00004+0.00009*xDiff/d.width;
+        if(xDiff <= 0) attractiveness[0] += 0.00004+0.00009*Math.abs(xDiff)/d.width;
+        if(yDiff >= 0) attractiveness[3] += 0.00004+0.00009*yDiff/d.height;
+        if(yDiff <= 0) attractiveness[2] += 0.00004+0.00009*Math.abs(yDiff)/d.height;
+        //System.out.println(attractiveness[0]+","+attractiveness[1]+","+attractiveness[2]+","+attractiveness[3]);
+        
+        //randomness
+        attractiveness[0] += 0.0005;
+        attractiveness[1] += 0.0005;
+        attractiveness[2] += 0.0005;
+        attractiveness[3] += 0.0005;
         
         //obstacles non attractiveness
         for (Rectangle obst : obstacles){
-            if(this.location.x + 1 >= obst.x)
+            if(this.location.x + 1 == obst.x && this.location.y>obst.y && this.location.y<obst.y+obst.height)
                 attractiveness[1] = 0;
-            if(this.location.x - 1 <= obst.x+obst.width)
+            if(this.location.x - 1 == obst.x+obst.width && this.location.y>obst.y && this.location.y<obst.y+obst.height)
                 attractiveness[0] = 0;
-            if(this.location.y + 1 >= obst.y)
+            if(this.location.y + 1 == obst.y && this.location.x>obst.x && this.location.x<obst.x+obst.width)
                 attractiveness[3] = 0;
-            if(this.location.y - 1 <= obst.y+obst.height)
+            if(this.location.y - 1 == obst.y+obst.height && this.location.x>obst.x && this.location.x<obst.x+obst.width)
                 attractiveness[2] = 0;
         }
-        
+
+        // 2 
+        //0 1
+        // 3
+        //Choose a location
         switch (choose(attractiveness[0],attractiveness[1],attractiveness[2],attractiveness[3])) {
             case 1:  this.location.x = this.location.x - 1;
                 break;
@@ -100,8 +124,11 @@ public class Ant {
         }
         
         updateMemory();
-        if(this.location == location)
+        if(this.location.x == location.x && this.location.y == location.y){
+            this.antLifeTime = this.initAnt;
             foodFound = true;
+        }
+           
         
     }
     
@@ -111,17 +138,17 @@ public class Ant {
         double random = Math.random()*sum;
         if(random > 0 && random < p1)
             return 1;
-        else if(random > p1 && random < p2)
+        else if(random > p1 && random < p1+p2)
             return 2;
-        else if(random > p2 && random < p3)
+        else if(random > p1+p2 && random < p1+p2+p3)
             return 3;
         else
             return 4;
     }
     
     private void updateMemory(){
+        this.memory[memoryPos] = new Point(this.location);
         memoryPos ++;
-        this.memory[memoryPos] = this.location;
     }
     
     public void setLocation(Point p){
@@ -132,8 +159,8 @@ public class Ant {
         return this.location;
     }
     
-    public boolean isAlive(){
-        return this.antLifeTime>0;
+    public boolean hasFoundFood(){
+        return this.foodFound;   
     }
     
 }

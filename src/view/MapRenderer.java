@@ -18,6 +18,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import model.Ant;
 
 /**
  *
@@ -31,11 +32,11 @@ class MapRenderer extends JPanel {
     private Image antImage = null;
     private Image startImage = null;
     private Image endImage = null;
-    private Point antList[] = null;
+    private Ant[] antList = null;
     private Point startPoint = null;
     private int startPointSize = 30;
     private int endPointSize = 30;
-    private int antSize = 30;
+    private int antSize = 15;
     private Point endPoint = null;
     private Dimension dim = null;
     private Rectangle[] obstacles = null;
@@ -96,7 +97,7 @@ class MapRenderer extends JPanel {
     public void updateMapDimension(Dimension dim){
         this.dim = dim;
     }
-    public void updateAnts(Point antList[]){
+    public void updateAnts(Ant antList[]){
         this.antList = antList;
     }
     public void updateImage(Image newBgImage){
@@ -128,7 +129,6 @@ class MapRenderer extends JPanel {
                     (int) (obstacles[i].width*(getWidth()/(float) dim.width)), 
                     (int) (obstacles[i].height*(getHeight()/(float) dim.height)));
         }
-        
         //Start and end
         int xStart = (int) ((startPoint.x - startPointSize/2)*(getWidth()/(float) dim.width));
         int yStart = (int) ((startPoint.y - startPointSize/2)*(getHeight()/(float) dim.height));
@@ -140,7 +140,19 @@ class MapRenderer extends JPanel {
         g.drawImage(endImage,xEnd < 0 ? 0 : xEnd ,
                              yEnd < 0 ? 0 : yEnd ,
                              endPointSize, endPointSize ,null);
+        
         //ants
-        //g.drawImage(antImage,250 ,34, 27, 30 ,null);
+        if(antList != null)
+            if(antList[0] != null)
+                for (Ant k : antList){
+                    int antX =(int) (k.getLocation().x*(getWidth()/(float) dim.width)- antSize/2) ;
+                    int antY =(int) (k.getLocation().y*(getHeight()/(float) dim.height)- antSize/2);
+                    if(antX>=0 && antY>=0 && antX <= this.getWidth() && antY<=this.getHeight())
+                        g.drawImage(antImage,antX,antY, antSize, antSize ,null);
+                }
+    }
+    
+    public Ant[] getAnt(){
+        return this.antList;
     }
 }

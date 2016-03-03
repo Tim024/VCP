@@ -46,4 +46,9 @@ public class Window extends JFrame {
         mapRenderer.updateObstacles(myControler.getMap().getObstacles());
         mapRenderer.repaint();
     }
+    
+    public void updateAnts(){
+        mapRenderer.updateAnts(myControler.getAlgo().getAnts());
+        mapRenderer.repaint();
+    }
 }

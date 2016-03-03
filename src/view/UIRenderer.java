@@ -49,7 +49,7 @@ public class UIRenderer extends JPanel {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("You clicked the start button"); //To change body of generated methods, choose Tools | Templates.
+                c.run();
             }
         }); 
         
@@ -59,7 +59,7 @@ public class UIRenderer extends JPanel {
         stopButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("You clicked the stop button"); //To change body of generated methods, choose Tools | Templates.
+                c.stopRun();
             }
         });
         

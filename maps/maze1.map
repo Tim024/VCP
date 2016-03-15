@@ -1,0 +1,179 @@
+//Map Dimension (w,h)
+400
+400
+//Map Starting Point (x,y)
+161
+161
+//Map EndingPoint (x,y)
+307
+247
+//Obstacle (x,y,w,h)
+112
+171
+31
+59
+//Obstacle (x,y,w,h)
+172
+174
+57
+57
+//Obstacle (x,y,w,h)
+258
+173
+29
+58
+//Obstacle (x,y,w,h)
+173
+260
+56
+28
+//Obstacle (x,y,w,h)
+259
+261
+27
+82
+//Obstacle (x,y,w,h)
+259
+260
+86
+27
+//Obstacle (x,y,w,h)
+315
+318
+29
+26
+//Obstacle (x,y,w,h)
+314
+171
+30
+60
+//Obstacle (x,y,w,h)
+258
+61
+28
+85
+//Obstacle (x,y,w,h)
+283
+117
+61
+29
+//Obstacle (x,y,w,h)
+314
+57
+29
+29
+//Obstacle (x,y,w,h)
+172
+116
+58
+29
+//Obstacle (x,y,w,h)
+173
+317
+56
+27
+//Obstacle (x,y,w,h)
+29
+260
+115
+114
+//Obstacle (x,y,w,h)
+5
+368
+392
+30
+//Obstacle (x,y,w,h)
+29
+374
+-24
+-360
+//Obstacle (x,y,w,h)
+5
+389
+25
+-373
+//Obstacle (x,y,w,h)
+30
+31
+-24
+341
+//Obstacle (x,y,w,h)
+29
+30
+-13
+342
+//Obstacle (x,y,w,h)
+14
+374
+15
+-349
+//Obstacle (x,y,w,h)
+144
+145
+-28
+-84
+//Obstacle (x,y,w,h)
+58
+118
+85
+24
+//Obstacle (x,y,w,h)
+58
+116
+84
+29
+//Obstacle (x,y,w,h)
+114
+59
+30
+86
+//Obstacle (x,y,w,h)
+172
+61
+58
+25
+//Obstacle (x,y,w,h)
+56
+58
+31
+29
+//Obstacle (x,y,w,h)
+58
+171
+29
+61
+//Obstacle (x,y,w,h)
+30
+293
+-10
+-264
+//Obstacle (x,y,w,h)
+30
+31
+343
+-11
+//Obstacle (x,y,w,h)
+30
+32
+345
+1
+//Obstacle (x,y,w,h)
+371
+30
+3
+340
+//Obstacle (x,y,w,h)
+31
+366
+-7
+-335
+//Obstacle (x,y,w,h)
+32
+32
+-2
+241
+//Obstacle (x,y,w,h)
+32
+27
+-18
+234

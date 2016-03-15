@@ -31,7 +31,7 @@ public class Window extends JFrame {
         contentPanel.add(mapRenderer);
         contentPanel.add(uIRenderer);
         
-        this.setSize(550, 700);
+        this.setSize(600, 800);
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(contentPanel);

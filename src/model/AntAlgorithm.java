@@ -26,10 +26,10 @@ public class AntAlgorithm {
     private double[][] pheromonTable;
     
     public AntAlgorithm(Map map){
-        this.numberOfAnts = 10;
-        this.antLifetime = 20000;
-        this.pheromonDrop = 5000;
-        this.pheromonEvaporation = 0.002;
+        this.numberOfAnts = 1000;
+        this.antLifetime = 1000;
+        this.pheromonDrop = 100;
+        this.pheromonEvaporation = 1.1;
         this.map = map;
         
         this.pheromonTable = new double[map.getDimension().width][map.getDimension().height];
@@ -68,7 +68,7 @@ public class AntAlgorithm {
         //and evaporation
         for(int x=0;x<map.getDimension().width;x++){
             for(int y=0;y<map.getDimension().height;y++){
-                pheromonTable[x][y] = pheromonTable[x][y] * pheromonEvaporation < 0.00000000000000000001 ? 0 : (pheromonTable[x][y] * pheromonEvaporation);
+                pheromonTable[x][y] = pheromonTable[x][y] * pheromonEvaporation < 0.001 ? 0.001 : (pheromonTable[x][y] * pheromonEvaporation);
             }
         }
     }
@@ -78,8 +78,8 @@ public class AntAlgorithm {
     }
 
     public void printPheromnTable() {
-        for(int x=000;x<200;x++){
-            for(int y=000;y<200;y++){
+        for(int x=000;x<100;x++){
+            for(int y=000;y<100;y++){
                 System.out.print(pheromonTable[x][y]);
 
             }

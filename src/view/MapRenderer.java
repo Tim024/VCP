@@ -11,6 +11,7 @@ import main.Controler;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -36,10 +37,12 @@ class MapRenderer extends JPanel {
     private Point startPoint = null;
     private int startPointSize = 30;
     private int endPointSize = 30;
-    private int antSize = 15;
+    private int antSize = 13;
     private Point endPoint = null;
     private Dimension dim = null;
     private Rectangle[] obstacles = null;
+    
+    private int xObs=0,yObs=0;
     
     MapRenderer(Controler c) {
         myControler = c;
@@ -66,28 +69,31 @@ class MapRenderer extends JPanel {
         }
         
         this.addMouseListener(new MouseAdapter() {
-                int x=0,y=0;
+                
                 
                 @Override
                 public void mousePressed(MouseEvent e) {
                     if(c.startingPointToBePlaced){
-                        c.setStartingPoint((int) (e.getX()*((float) dim.width)/getWidth()), 
-                                (int) (e.getY()*((float) dim.height)/getHeight()));
+                        c.setStartingPoint((int) (e.getX()*((float)dim.width/getWidth())), 
+                                (int) (e.getY()*((float) dim.height/getHeight())));
                         c.startingPointToBePlaced = false;
                     } else if(c.endingPointToBePlaced){
-                        c.setEndingPoint((int) (e.getX()*((float) dim.width)/getWidth()), 
-                                (int) (e.getY()*((float) dim.height)/getHeight()));
+                        c.setEndingPoint((int) (e.getX()*((float) dim.width/getWidth())), 
+                                (int) (e.getY()*((float) dim.height/getHeight())));
                         c.endingPointToBePlaced = false;
                     } else if(c.obstacleToBePlaced){
-                        x = (int) (e.getX()*((float) dim.width)/getWidth());
-                        y = (int) (e.getY()*((float) dim.height)/getHeight());
+                        xObs = (int) (e.getX()*((float) dim.width/getWidth()));
+                        yObs = (int) (e.getY()*((float) dim.height/getHeight()));
                     }
                 }
+                
                 
                 @Override
                 public void mouseReleased(MouseEvent e){
                     if(c.obstacleToBePlaced){
-                        c.setObstacle(x,y,(int) (e.getX()*((float) dim.width)/getWidth()) - x, (int) (e.getY()*((float) dim.height)/getHeight()) - y);
+                        int w = Math.abs((int) (e.getX()*((float) dim.width/getWidth())) - xObs);
+                        int h = Math.abs((int) (e.getY()*((float) dim.height/getHeight())) - yObs);
+                        c.setObstacle(xObs,yObs,w,h);
                         c.obstacleToBePlaced = false;
                     }
                 }
@@ -114,14 +120,18 @@ class MapRenderer extends JPanel {
         this.obstacles = obstacles;
     }
     
-    //TODO, if image out of bounds.
+    //TODO
+    //pheromon display,
+    //rect display
+    //ui algo modifier
+    //gui
     @Override
     protected void paintComponent(Graphics g) {
         //Paint all images
         super.paintComponent(g);
         //background
         g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), null);
-        //obstacles
+        
         for(int i = 0; i < obstacles.length; i++)
         {
             g.fillRect((int) (obstacles[i].x*(getWidth()/(float) dim.width)), 
@@ -130,13 +140,14 @@ class MapRenderer extends JPanel {
                     (int) (obstacles[i].height*(getHeight()/(float) dim.height)));
         }
         //Start and end
-        int xStart = (int) ((startPoint.x - startPointSize/2)*(getWidth()/(float) dim.width));
-        int yStart = (int) ((startPoint.y - startPointSize/2)*(getHeight()/(float) dim.height));
+        int xStart = (int) ((startPoint.x)*(getWidth()/(float) dim.width)) - startPointSize/2;
+        int yStart = (int) ((startPoint.y)*(getHeight()/(float) dim.height)) - startPointSize/2;
+        
         g.drawImage(startImage, xStart < 0 ? 0 : xStart ,
                                 yStart < 0 ? 0 : yStart ,
                                 startPointSize, startPointSize ,null);
-        int xEnd = (int) ((endPoint.x - endPointSize/2)*(getWidth()/(float) dim.width));
-        int yEnd = (int) ((endPoint.y - endPointSize/2)*(getHeight()/(float) dim.height));
+        int xEnd = (int) ((endPoint.x)*(getWidth()/(float) dim.width)) - endPointSize/2;
+        int yEnd = (int) ((endPoint.y)*(getHeight()/(float) dim.height)) - endPointSize/2;
         g.drawImage(endImage,xEnd < 0 ? 0 : xEnd ,
                              yEnd < 0 ? 0 : yEnd ,
                              endPointSize, endPointSize ,null);
@@ -145,8 +156,8 @@ class MapRenderer extends JPanel {
         if(antList != null)
             if(antList[0] != null)
                 for (Ant k : antList){
-                    int antX =(int) (k.getLocation().x*(getWidth()/(float) dim.width)- antSize/2) ;
-                    int antY =(int) (k.getLocation().y*(getHeight()/(float) dim.height)- antSize/2);
+                    int antX =(int) (k.getLocation().x*(getWidth()/(float) dim.width)) - antSize/2;
+                    int antY =(int) (k.getLocation().y*(getHeight()/(float) dim.height))- antSize/2;
                     if(antX>=0 && antY>=0 && antX <= this.getWidth() && antY<=this.getHeight())
                         g.drawImage(antImage,antX,antY, antSize, antSize ,null);
                 }

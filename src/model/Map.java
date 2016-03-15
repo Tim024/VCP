@@ -10,6 +10,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 
 public class Map {
@@ -19,16 +20,22 @@ public class Map {
     private Point endPosition = null; //one point, maybe implement more later
     private Rectangle[] obstacles = null; //list of rectangles
     
-    //Default constructor, need to implement Map(new MapReader(filepath));
     public Map(){
         this.mapDimension = new Dimension(500,500);
         this.endPosition = new Point(400,400);
         this.startPosition = new Point(30,30);
-        this.mapImage = Toolkit.getDefaultToolkit().getImage("images/a.png");
+        this.mapImage = Toolkit.getDefaultToolkit().getImage("maps/default.jpg");
         this.obstacles = new Rectangle[1];
         this.obstacles[0] = new Rectangle(89,34,100,100);
     }
     
+    public void setImage(BufferedImage i){
+        this.mapImage = i;
+    }
+    public void removeObstacles(){
+        this.obstacles = new Rectangle[1];
+        this.obstacles[0] = new Rectangle(0,0,0,0);
+    }
     public Dimension getDimension(){
         return this.mapDimension;
     }
@@ -55,6 +62,10 @@ public class Map {
     public void setEndingPoint(int x, int y) {
         this.endPosition.x = x;
         this.endPosition.y = y;
+    }
+    
+    public void setDimension(int w, int h){
+        this.mapDimension = new Dimension(w,h);
     }
     
     public void placeObstacle(int x, int y, int width, int height){

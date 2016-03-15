@@ -5,8 +5,10 @@
  */
 package view;
 
+import javax.swing.JTextArea;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -28,12 +30,14 @@ public class UIRenderer extends JPanel {
     private JButton startButton = null;
     private JButton stopButton = null;
     private JButton saveButton = null;
+    private JButton loadButton = null;
+    private JButton loadIMGButton = null;
     private JButton placeStart = null;
     private JButton placeEnd = null;
     private JButton placeObstacle = null;
+    private JTextArea text = new JTextArea(5,20);
     
     public UIRenderer(Controler c){
-        
         
         //Set border
         TitledBorder title = BorderFactory.createTitledBorder("Options");
@@ -41,6 +45,11 @@ public class UIRenderer extends JPanel {
         
         //Layout
         this.setLayout(new FlowLayout());
+        
+        //Set text
+        text.setMargin(new Insets(5,5,5,5));
+        text.setEditable(false);
+        this.add(text);
         
         //Button initialisation
         startButton = new JButton("START");
@@ -70,12 +79,40 @@ public class UIRenderer extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    c.saveConfiguration();
-                } catch (IOException error) {
-                    displaySaveError(error);
+                    text.append(c.saveConfiguration());
+                } catch (IOException ex) {
+                    displayError("saved",ex);
                 }
             }
-        }); 
+        });
+        
+        loadButton = new JButton("Load configuration");
+        loadButton.setPreferredSize(bigButton);
+        this.add(loadButton);
+        loadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    text.append(c.loadConfiguration());
+                } catch (IOException ex) {
+                    displayError("opened",ex);
+                }
+            }
+        });
+        
+        loadIMGButton = new JButton("Load image");
+        loadIMGButton.setPreferredSize(bigButton);
+        this.add(loadIMGButton);
+        loadIMGButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    text.append(c.loadIMG());
+                } catch (IOException ex) {
+                    displayError("opened",ex);
+                }
+            }
+        });
         
         placeStart = new JButton("Place starting point");
         placeStart.setPreferredSize(bigButton);
@@ -108,10 +145,10 @@ public class UIRenderer extends JPanel {
         });
     }
     
-    private void displaySaveError(IOException error){
+    private void displayError(String saved, IOException error){
         JOptionPane.showMessageDialog(this,
-                        "File could not be saved : "+error.getMessage(),
-                        "Saving error",
+                        "File could not be "+saved+" : "+error.getMessage(),
+                        "Error",
                         JOptionPane.ERROR_MESSAGE);
     }
 }

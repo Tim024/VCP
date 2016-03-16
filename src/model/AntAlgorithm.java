@@ -7,6 +7,7 @@ package model;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.Random;
 
 /**
  *
@@ -27,9 +28,9 @@ public class AntAlgorithm {
     
     public AntAlgorithm(Map map){
         this.numberOfAnts = 1000;
-        this.antLifetime = 1000;
+        this.antLifetime = Math.max(map.getDimension().height,map.getDimension().width);
         this.pheromonDrop = 100;
-        this.pheromonEvaporation = 1.1;
+        this.pheromonEvaporation = 0.995;
         this.map = map;
         
         this.pheromonTable = new double[map.getDimension().width][map.getDimension().height];
@@ -39,8 +40,9 @@ public class AntAlgorithm {
             }
         }
         antList = new Ant[numberOfAnts];
+        Random rand = new Random();
         for(int i = 0; i < numberOfAnts; i ++){
-            antList[i] = new Ant(map.getStartingPoint(), antLifetime);
+            antList[i] = new Ant(map.getStartingPoint(), rand.nextInt(5*antLifetime)+5*antLifetime);
         }
     }
     
@@ -75,6 +77,10 @@ public class AntAlgorithm {
 
     public Ant[] getAnts() {
         return this.antList;
+    }
+    
+    public double[][] getPheromons(){
+        return this.pheromonTable;
     }
 
     public void printPheromnTable() {

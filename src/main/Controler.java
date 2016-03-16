@@ -39,6 +39,7 @@ public class Controler {
     public boolean endingPointToBePlaced = false;
     public boolean obstacleToBePlaced = false;
     private boolean running = false;
+    public boolean pheromonVisible = false;
 
     private JFileChooser fc = new JFileChooser();
 

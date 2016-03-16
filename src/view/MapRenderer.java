@@ -5,6 +5,7 @@
 */
 package view;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.BorderFactory; 
 import main.Controler;
@@ -129,6 +130,23 @@ class MapRenderer extends JPanel {
     protected void paintComponent(Graphics g) {
         //Paint all images
         super.paintComponent(g);
+        //Pheromon
+        if(myControler.pheromonVisible){
+            int width = myControler.getMap().getDimension().width;
+            int height = myControler.getMap().getDimension().height;
+            double[][] pheroTable = myControler.getAlgo().getPheromons();
+            for(int x=0; x < width ; x ++){
+                for(int y=0; y < height; y ++){
+                    double red = pheroTable[x][y] > 1 ? 1 : pheroTable[x][y];
+                    Color col = new Color((float) red,(float)  0.5,(float)  0.7, (float) 0.7);
+                    g.setColor(col);
+                    g.fillOval((int)(x*(getWidth()/(float) dim.width)), (int)(y*(getHeight()/(float) dim.height)), 4, 4);
+                }
+            }
+            
+            return;
+        }
+            
         //background
         g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), null);
         

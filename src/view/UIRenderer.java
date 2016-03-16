@@ -35,6 +35,7 @@ public class UIRenderer extends JPanel {
     private JButton placeStart = null;
     private JButton placeEnd = null;
     private JButton placeObstacle = null;
+    private JButton pheroButton = null;
     private JTextArea text = new JTextArea(5,20);
     
     public UIRenderer(Controler c){
@@ -114,6 +115,19 @@ public class UIRenderer extends JPanel {
             }
         });
         
+        pheroButton = new JButton("See Pheromon");
+        pheroButton.setPreferredSize(bigButton);
+        this.add(pheroButton);
+        pheroButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                c.endingPointToBePlaced = false;
+                c.obstacleToBePlaced = false;
+                c.startingPointToBePlaced = false;
+                c.pheromonVisible = !c.pheromonVisible;
+            }
+        });
+        
         placeStart = new JButton("Place starting point");
         placeStart.setPreferredSize(bigButton);
         this.add(placeStart);
@@ -121,6 +135,8 @@ public class UIRenderer extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 c.startingPointToBePlaced = true;
+                c.endingPointToBePlaced = false;
+                c.obstacleToBePlaced = false;
             }
         });
         
@@ -131,6 +147,8 @@ public class UIRenderer extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 c.endingPointToBePlaced = true;
+                c.obstacleToBePlaced = false;
+                c.startingPointToBePlaced = false;
             }
         });
         
@@ -141,6 +159,8 @@ public class UIRenderer extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 c.obstacleToBePlaced = true;
+                c.endingPointToBePlaced = false;
+                c.startingPointToBePlaced = false;
             }
         });
     }

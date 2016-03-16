@@ -63,7 +63,7 @@ public class Ant {
         int yDiff = location.y - this.location.y;
 
         double[] attractiveness = new double[4];
-        /*
+        
         double pheromonSum = 0;
         pheromonSum += pheromonTable[this.location.x + 1][this.location.y]==0?0:pheromonTable[this.location.x + 1][this.location.y];
         pheromonSum += pheromonTable[this.location.x - 1][this.location.y]==0?0:pheromonTable[this.location.x - 1][this.location.y];
@@ -76,12 +76,12 @@ public class Ant {
         attractiveness[1] = pheromonTable[this.location.x + 1][this.location.y]/pheromonSum;
         attractiveness[2] = pheromonTable[this.location.x][this.location.y - 1]/pheromonSum;
         attractiveness[3] = pheromonTable[this.location.x][this.location.y + 1]/pheromonSum;
-         */
+         /*
         attractiveness[0] = pheromonTable[this.location.x - 1][this.location.y];
         attractiveness[1] = pheromonTable[this.location.x + 1][this.location.y];
         attractiveness[2] = pheromonTable[this.location.x][this.location.y - 1];
         attractiveness[3] = pheromonTable[this.location.x][this.location.y + 1];
-
+*/
         //direction attractiveness
         if(xDiff >= 0) attractiveness[1] += 0.000004+0.00009*xDiff/d.width;
         if(xDiff <= 0) attractiveness[0] += 0.000004+0.00009*Math.abs(xDiff)/d.width;
@@ -89,10 +89,10 @@ public class Ant {
         if(yDiff <= 0) attractiveness[2] += 0.000004+0.00009*Math.abs(yDiff)/d.height;
         //System.out.println(attractiveness[0]+","+attractiveness[1]+","+attractiveness[2]+","+attractiveness[3]);
         //randomness
-        //attractiveness[0] += 0.0005;
-        //attractiveness[1] += 0.0005;
-        //attractiveness[2] += 0.0005;
-        //attractiveness[3] += 0.0005;
+        attractiveness[0] += 0.0005;
+        attractiveness[1] += 0.0005;
+        attractiveness[2] += 0.0005;
+        attractiveness[3] += 0.0005;
         
 
         //Non attractiveness of the previous pos :

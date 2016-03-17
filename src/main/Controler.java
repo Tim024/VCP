@@ -33,7 +33,7 @@ public class Controler {
     private Map map = null;
     private Window view = null;
     private AntAlgorithm algo = null;
-    private int speed = 1;
+    private int speed = 0;
 
     public boolean startingPointToBePlaced = false;
     public boolean endingPointToBePlaced = false;
@@ -47,7 +47,7 @@ public class Controler {
         File workingDirectory = new File(System.getProperty("user.dir"));
         fc.setCurrentDirectory(workingDirectory);
 
-        this.speed = 1;
+        this.speed = 10;
         map = new Map();//Default
         view = new Window(this);
 

@@ -89,11 +89,12 @@ public class Ant {
         if(yDiff <= 0) attractiveness[2] += 0.000004+0.00009*Math.abs(yDiff)/d.height;
         //System.out.println(attractiveness[0]+","+attractiveness[1]+","+attractiveness[2]+","+attractiveness[3]);
         //randomness
+        /*
         attractiveness[0] += 0.0005;
         attractiveness[1] += 0.0005;
         attractiveness[2] += 0.0005;
         attractiveness[3] += 0.0005;
-        
+        */
 
         //Non attractiveness of the previous pos :
         // 2 
@@ -106,24 +107,24 @@ public class Ant {
                 //System.out.println(previousPos.x + " "+previousPos.y);
                 if (this.location.x + 1 == previousPos.x) {
                     //System.out.println("Don't go right");
-                    attractiveness[1] *= 0.5;
+                    attractiveness[1] *= 0.3;
                     attractiveness[2] *= 0.7;
                     attractiveness[3] *= 0.7;
                 } else if (this.location.x - 1 == previousPos.x) {
                     //System.out.println("Don't go left");
                     attractiveness[2] *= 0.7;
-                    attractiveness[0] *= 0.5;
+                    attractiveness[0] *= 0.3;
                     attractiveness[3] *= 0.7;
                 } else if (this.location.y + 1 == previousPos.y) {
                     //System.out.println("Dont go down");
                     attractiveness[1] *= 0.7;
-                    attractiveness[3] *= 0.5;
+                    attractiveness[3] *= 0.3;
                     attractiveness[0] *= 0.7;
                 } else if (this.location.y - 1 == previousPos.y) {
                     //System.out.println("Dont go up");
                     attractiveness[1] *= 0.7;
                     attractiveness[0] *= 0.7;
-                    attractiveness[2] *= 0.5;
+                    attractiveness[2] *= 0.3;
                 }
             }
         }

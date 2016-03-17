@@ -19,6 +19,7 @@ public class AntAlgorithm {
     private int antLifetime; //number Of Iteration before they die
     private double pheromonDrop; //pheromon they drop
     private double pheromonEvaporation; //amount of pheromon they loose
+    private double minPheromon;
     
     private Ant[] antList = null;
     
@@ -27,10 +28,11 @@ public class AntAlgorithm {
     private double[][] pheromonTable;
     
     public AntAlgorithm(Map map){
+        this.minPheromon = 0.001;
         this.numberOfAnts = 1000;
         this.antLifetime = Math.max(map.getDimension().height,map.getDimension().width);
-        this.pheromonDrop = 100;
-        this.pheromonEvaporation = 0.995;
+        this.pheromonDrop = 50;
+        this.pheromonEvaporation = 0.998;//0.998maze.map ;//for 100x100 0.995; //should be higher for bigger map
         this.map = map;
         
         this.pheromonTable = new double[map.getDimension().width][map.getDimension().height];
@@ -70,7 +72,7 @@ public class AntAlgorithm {
         //and evaporation
         for(int x=0;x<map.getDimension().width;x++){
             for(int y=0;y<map.getDimension().height;y++){
-                pheromonTable[x][y] = pheromonTable[x][y] * pheromonEvaporation < 0.001 ? 0.001 : (pheromonTable[x][y] * pheromonEvaporation);
+                pheromonTable[x][y] = pheromonTable[x][y] * pheromonEvaporation < minPheromon ? minPheromon : (pheromonTable[x][y] * pheromonEvaporation);
             }
         }
     }

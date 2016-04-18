@@ -12,7 +12,6 @@ import main.Controler;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
-import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -137,8 +136,8 @@ class MapRenderer extends JPanel {
             double[][] pheroTable = myControler.getAlgo().getPheromons();
             for(int x=0; x < width ; x ++){
                 for(int y=0; y < height; y ++){
-                    double red = pheroTable[x][y] > 1 ? 1 : pheroTable[x][y];
-                    Color col = new Color((float) red,(float)  0.5,(float)  0.7, (float) 0.7);
+                    double red = pheroTable[x][y]/myControler.getAlgo().getPheromoneDrop() > 1 ? 1 : pheroTable[x][y]/myControler.getAlgo().getPheromoneDrop();
+                    Color col = new Color((float) (1-red),(float)  (1-red),(float)  (1-(red*red)));
                     g.setColor(col);
                     g.fillOval((int)(x*(getWidth()/(float) dim.width)), (int)(y*(getHeight()/(float) dim.height)), 4, 4);
                 }
@@ -147,6 +146,8 @@ class MapRenderer extends JPanel {
             return;
         }
             
+        
+        g.setColor(Color.BLACK);  
         //background
         g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), null);
         
@@ -179,6 +180,29 @@ class MapRenderer extends JPanel {
                     if(antX>=0 && antY>=0 && antX <= this.getWidth() && antY<=this.getHeight())
                         g.drawImage(antImage,antX,antY, antSize, antSize ,null);
                 }
+        
+        if(myControler.displayPath){
+            int width = myControler.getMap().getDimension().width;
+            int height = myControler.getMap().getDimension().height;
+            
+            if(myControler.getAlgo().getBestAnt()==null){
+                myControler.getView().updateText("Best path is null !");
+                myControler.displayPath = false;
+                return;
+            }
+           
+            Point[] path = myControler.getAlgo().getBestAnt();
+            if(path == null) {
+                myControler.getView().updateText("Best path is null !!");
+                myControler.displayPath = false;
+                return;
+            }
+            for(Point p : path){
+                g.setColor(Color.RED);
+                if(p != null)
+                    g.fillOval((int)(p.x*(getWidth()/(float) dim.width)), (int)(p.y*(getHeight()/(float) dim.height)), 4, 4);
+            }
+        }
     }
     
     public Ant[] getAnt(){

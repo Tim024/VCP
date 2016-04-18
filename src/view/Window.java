@@ -29,13 +29,19 @@ public class Window extends JFrame {
         contentPanel = new JSplitPane( JSplitPane.VERTICAL_SPLIT);
         contentPanel.setDividerLocation(500);
         contentPanel.add(mapRenderer);
-        contentPanel.add(uIRenderer);
+        JFrame uiRendererWindow = new JFrame();
+        uiRendererWindow.add(uIRenderer);
+        uiRendererWindow.setSize(870,300);
+        //contentPanel.add(uIRenderer);
         
-        this.setSize(600, 800);
+        this.setSize(700, 700);
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(contentPanel);
         this.setVisible(true);
+        
+        
+        uiRendererWindow.setVisible(true);
     }
 
     public void updateView() {
@@ -50,5 +56,13 @@ public class Window extends JFrame {
     public void updateAnts(){
         mapRenderer.updateAnts(myControler.getAlgo().getAnts());
         mapRenderer.repaint();
+    }
+    
+    public void updateText(String s){
+        this.uIRenderer.textDisplay(s);
+    }
+    
+    public int getNbAnts(){
+        return uIRenderer.getNbAnts();
     }
 }

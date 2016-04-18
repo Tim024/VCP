@@ -5,9 +5,11 @@
  */
 package view;
 
+import java.awt.BorderLayout;
 import javax.swing.JTextArea;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +18,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 import main.Controler;
 
@@ -28,6 +31,7 @@ public class UIRenderer extends JPanel {
     private Dimension smallButton = new Dimension(72, 35);
     private Dimension bigButton = new Dimension(140,35);
     private JButton startButton = null;
+    private JButton restartButton = null;
     private JButton stopButton = null;
     private JButton saveButton = null;
     private JButton loadButton = null;
@@ -36,36 +40,62 @@ public class UIRenderer extends JPanel {
     private JButton placeEnd = null;
     private JButton placeObstacle = null;
     private JButton pheroButton = null;
+    private JButton displayPath = null;
     private JTextArea text = new JTextArea(5,20);
+    private JScrollPane scrollPane = new JScrollPane( text );
+    private UIAlgo uialgo = null;
+    
+    private JPanel eastPanel = new JPanel();
+    private JPanel westPanel = new JPanel();
+    private JPanel southPanel = new JPanel();
+    
     
     public UIRenderer(Controler c){
+        
+        eastPanel.setLayout(new GridLayout(1,1));
+        westPanel.setLayout(new GridLayout(5,2));
+        southPanel.setLayout(new FlowLayout());
         
         //Set border
         TitledBorder title = BorderFactory.createTitledBorder("Options");
         this.setBorder(title);
         
         //Layout
-        this.setLayout(new FlowLayout());
+        this.setLayout(new BorderLayout());
+        
+        //uialgo
+        uialgo = new UIAlgo(c);
+        eastPanel.add(uialgo);
         
         //Set text
         text.setMargin(new Insets(5,5,5,5));
         text.setEditable(false);
-        this.add(text);
+        this.add(scrollPane, BorderLayout.CENTER);
         
         //Button initialisation
         startButton = new JButton("START");
         startButton.setPreferredSize(smallButton);
-        this.add(startButton);
+        southPanel.add(startButton);
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 c.run();
             }
-        }); 
+        });
+        
+        restartButton = new JButton("RESTART");
+        restartButton.setPreferredSize(smallButton);
+        southPanel.add(restartButton);
+        restartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                c.restart();
+            }
+        });
         
         stopButton = new JButton("STOP");
         stopButton.setPreferredSize(smallButton);
-        this.add(stopButton);
+        southPanel.add(stopButton);
         stopButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -75,7 +105,7 @@ public class UIRenderer extends JPanel {
         
         saveButton = new JButton("Save configuration");
         saveButton.setPreferredSize(bigButton);
-        this.add(saveButton);
+        southPanel.add(saveButton);
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -89,7 +119,7 @@ public class UIRenderer extends JPanel {
         
         loadButton = new JButton("Load configuration");
         loadButton.setPreferredSize(bigButton);
-        this.add(loadButton);
+        southPanel.add(loadButton);
         loadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -103,7 +133,7 @@ public class UIRenderer extends JPanel {
         
         loadIMGButton = new JButton("Load image");
         loadIMGButton.setPreferredSize(bigButton);
-        this.add(loadIMGButton);
+        southPanel.add(loadIMGButton);
         loadIMGButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -117,7 +147,7 @@ public class UIRenderer extends JPanel {
         
         pheroButton = new JButton("See Pheromon");
         pheroButton.setPreferredSize(bigButton);
-        this.add(pheroButton);
+        westPanel.add(pheroButton);
         pheroButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -128,9 +158,23 @@ public class UIRenderer extends JPanel {
             }
         });
         
+        displayPath = new JButton("Display Best Path");
+        displayPath.setPreferredSize(smallButton);
+        westPanel.add(displayPath);
+        displayPath.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                c.endingPointToBePlaced = false;
+                c.obstacleToBePlaced = false;
+                c.startingPointToBePlaced = false;
+                c.pheromonVisible = false;
+                c.displayPath = !c.displayPath;
+            }
+        });
+        
         placeStart = new JButton("Place starting point");
         placeStart.setPreferredSize(bigButton);
-        this.add(placeStart);
+        westPanel.add(placeStart);
         placeStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -142,7 +186,7 @@ public class UIRenderer extends JPanel {
         
         placeEnd = new JButton("Place goal");
         placeEnd.setPreferredSize(bigButton);
-        this.add(placeEnd);
+        westPanel.add(placeEnd);
         placeEnd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -154,7 +198,7 @@ public class UIRenderer extends JPanel {
         
         placeObstacle = new JButton("Place obstacle");
         placeObstacle.setPreferredSize(bigButton);
-        this.add(placeObstacle);
+        westPanel.add(placeObstacle);
         placeObstacle.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -163,6 +207,10 @@ public class UIRenderer extends JPanel {
                 c.startingPointToBePlaced = false;
             }
         });
+        
+        this.add(eastPanel, BorderLayout.EAST);
+        this.add(westPanel, BorderLayout.WEST);
+        this.add(southPanel, BorderLayout.SOUTH);
     }
     
     private void displayError(String saved, IOException error){
@@ -170,5 +218,12 @@ public class UIRenderer extends JPanel {
                         "File could not be "+saved+" : "+error.getMessage(),
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public void textDisplay(String s){
+        if(s!=null) text.append(s);
+    }
+    public int getNbAnts(){
+        return uialgo.getNbAnts();
     }
 }

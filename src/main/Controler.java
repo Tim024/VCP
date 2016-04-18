@@ -40,6 +40,7 @@ public class Controler {
     public boolean obstacleToBePlaced = false;
     private boolean running = false;
     public boolean pheromonVisible = false;
+    public boolean displayPath = false;
 
     private JFileChooser fc = new JFileChooser();
 
@@ -47,7 +48,7 @@ public class Controler {
         File workingDirectory = new File(System.getProperty("user.dir"));
         fc.setCurrentDirectory(workingDirectory);
 
-        this.speed = 10;
+        this.speed = 1;
         map = new Map();//Default
         view = new Window(this);
 
@@ -62,17 +63,27 @@ public class Controler {
 
     public void run() {
         this.running = true;
+        double timeStarted = System.currentTimeMillis();
+        String myPreviousValue = null;
+        view.updateText("Time (ms), shortest path length \n");
         new Thread() {
             public void run() {
 
                 while (running) {
                     try {
-                        Thread.sleep(4);
+                        if(speed == 1) Thread.sleep(5);
+                        algo.moveStep(speed, map.getEndPoint(), map.getObstacles());
+                        
+                        double time = System.currentTimeMillis()-timeStarted;
+                        String myValue = algo.getMinPath();
+                        //System.out.println(myValue);
+                        if(myValue != myPreviousValue && myValue != null)
+                            view.updateText(Double.toString(time) + " "+ myValue + "\n");
+                        
+                        view.updateAnts();
                     } catch (InterruptedException ex) {
                         Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    algo.moveStep(speed, map.getEndPoint(), map.getObstacles());
-                    view.updateAnts();
                 }
                 //algo.printPheromnTable();
 
@@ -237,6 +248,9 @@ public class Controler {
     public AntAlgorithm getAlgo() {
         return this.algo;
     }
+    public Window getView() {
+        return this.view;
+    }
 
     public String loadIMG() throws IOException {
         int returnVal = fc.showOpenDialog(null);
@@ -252,4 +266,13 @@ public class Controler {
         }
     }
 
+    public void setSpeed(int s){
+        this.speed = s;
+    }
+
+    public void restart() {
+        this.running = false;
+        algo = new AntAlgorithm(map,view.getNbAnts());
+        this.run();
+    }
 }

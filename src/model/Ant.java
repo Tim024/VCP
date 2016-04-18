@@ -23,6 +23,7 @@ public class Ant {
     private int antLifeTime;
     private int initAnt;
     private Point location;
+    private int pathLength;
 
     public Ant(Point startingPoint, int antLifetime) {
         this.foodFound = false;
@@ -97,50 +98,50 @@ public class Ant {
         */
 
         //Non attractiveness of the previous pos :
-        // 2 
-        //0X1
-        // 3
-        if (memoryPos > 10) {
-            for (int k = 2; k < 10; k++) {
+        //  2 
+        //0 X 1
+        //  3
+        if (memoryPos > 3) {
+            for (int k = 2; k < 3; k++) {
                 Point previousPos = memory[memoryPos - k];
                 //System.out.println(this.location);
                 //System.out.println(previousPos.x + " "+previousPos.y);
-                if (this.location.x + 1 == previousPos.x) {
+                if (this.location.x + 1 == previousPos.x && this.location.y == previousPos.y) {
                     //System.out.println("Don't go right");
-                    attractiveness[1] *= 0.3;
-                    attractiveness[2] *= 0.7;
-                    attractiveness[3] *= 0.7;
-                } else if (this.location.x - 1 == previousPos.x) {
+                    attractiveness[1] *= 0.001;
+                    attractiveness[2] *= 0.9;
+                    attractiveness[3] *= 0.9;
+                } else if (this.location.x - 1 == previousPos.x && this.location.y == previousPos.y) {
                     //System.out.println("Don't go left");
-                    attractiveness[2] *= 0.7;
-                    attractiveness[0] *= 0.3;
-                    attractiveness[3] *= 0.7;
-                } else if (this.location.y + 1 == previousPos.y) {
+                    attractiveness[2] *= 0.9;
+                    attractiveness[0] *= 0.001;
+                    attractiveness[3] *= 0.9;
+                } else if (this.location.y + 1 == previousPos.y && this.location.x == previousPos.x ) {
                     //System.out.println("Dont go down");
-                    attractiveness[1] *= 0.7;
-                    attractiveness[3] *= 0.3;
-                    attractiveness[0] *= 0.7;
-                } else if (this.location.y - 1 == previousPos.y) {
+                    attractiveness[1] *= 0.9;
+                    attractiveness[3] *= 0.001;
+                    attractiveness[0] *= 0.9;
+                } else if (this.location.y - 1 == previousPos.y && this.location.x == previousPos.x) {
                     //System.out.println("Dont go up");
-                    attractiveness[1] *= 0.7;
-                    attractiveness[0] *= 0.7;
-                    attractiveness[2] *= 0.3;
+                    attractiveness[1] *= 0.9;
+                    attractiveness[0] *= 0.9;
+                    attractiveness[2] *= 0.001;
                 }
             }
         }
 
         //obstacles non attractiveness
         for (Rectangle obst : obstacles) {
-            if (this.location.x + 1 == obst.x && this.location.y > obst.y && this.location.y < obst.y + obst.height) {
+            if (this.location.x + 1 == obst.x && this.location.y >= obst.y && this.location.y <= obst.y + obst.height) {
                 attractiveness[1] = 0;
             }
-            if (this.location.x - 1 == obst.x + obst.width && this.location.y > obst.y && this.location.y < obst.y + obst.height) {
+            if (this.location.x - 1 == obst.x + obst.width && this.location.y >= obst.y && this.location.y <= obst.y + obst.height) {
                 attractiveness[0] = 0;
             }
-            if (this.location.y + 1 == obst.y && this.location.x > obst.x && this.location.x < obst.x + obst.width) {
+            if (this.location.y + 1 == obst.y && this.location.x >= obst.x && this.location.x <= obst.x + obst.width) {
                 attractiveness[3] = 0;
             }
-            if (this.location.y - 1 == obst.y + obst.height && this.location.x > obst.x && this.location.x < obst.x + obst.width) {
+            if (this.location.y - 1 == obst.y + obst.height && this.location.x >= obst.x && this.location.x <= obst.x + obst.width) {
                 attractiveness[2] = 0;
             }
         }
@@ -170,6 +171,7 @@ public class Ant {
             //System.out.print("FoodFound!+");
             this.antLifeTime = this.initAnt;
             foodFound = true;
+            this.pathLength = memoryPos + 1;
         }
 
     }
@@ -204,6 +206,22 @@ public class Ant {
 
     public boolean hasFoundFood() {
         return this.foodFound;
+    }
+    
+    public int getLength(){
+        return this.pathLength;
+    }
+    
+    public Point[] getMemory(){
+        return this.memory;
+    }
+
+    public void setMemory(Point[] memory) {
+        this.memory = memory;
+    }
+    
+    public int getMemoryPos(){
+        return this.memoryPos;
     }
 
 }

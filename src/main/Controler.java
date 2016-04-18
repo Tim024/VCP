@@ -272,7 +272,7 @@ public class Controler {
 
     public void restart() {
         this.running = false;
-        algo = new AntAlgorithm(map,view.getNbAnts());
+        algo.restart(view.getNbAnts());
         this.run();
     }
 }

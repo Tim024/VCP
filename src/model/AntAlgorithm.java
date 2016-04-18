@@ -165,4 +165,13 @@ public class AntAlgorithm {
     public void setNbOfAnt(int k) {
         this.numberOfAnts = k;
     }
+    
+    public void restart(int nbOfAnts){
+        this.numberOfAnts=nbOfAnts;
+        antList = new Ant[numberOfAnts];
+        Random rand = new Random();
+        for(int i = 0; i < numberOfAnts; i ++){
+            antList[i] = new Ant(map.getStartingPoint(), rand.nextInt(6*antLifetime)+5*antLifetime);
+        }
+    }
 }

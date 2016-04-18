@@ -1,0 +1,49 @@
+//Map Dimension (w,h)
+300
+200
+//Map Starting Point (x,y)
+37
+93
+//Map EndingPoint (x,y)
+255
+97
+//Obstacle (x,y,w,h)
+0
+0
+75
+75
+//Obstacle (x,y,w,h)
+0
+100
+75
+100
+//Obstacle (x,y,w,h)
+135
+0
+40
+79
+//Obstacle (x,y,w,h)
+135
+100
+40
+100
+//Obstacle (x,y,w,h)
+235
+0
+63
+85
+//Obstacle (x,y,w,h)
+233
+104
+66
+95
+//Obstacle (x,y,w,h)
+187
+16
+29
+111
+//Obstacle (x,y,w,h)
+87
+68
+32
+111
